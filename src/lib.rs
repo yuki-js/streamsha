@@ -19,25 +19,23 @@
 //! let mut hasher1 = Sha256::new();
 //! hasher1.update(b"pien");
 //! let state1 = hasher1.pause();
-//! 
+//!
 //! // Resume on the other instance
 //! let mut hasher2 = Sha256::resume(state1).unwrap();
 //! hasher2.update(b"paon");
 //! let hash2 = hasher2.finish();
-//! 
+//!
 //! assert_eq!(hash1, hash2);
 //! # }
 //! ```
 
 #![no_std]
-#[macro_use]
-mod utils;
 mod consts;
-pub mod traits;
+pub mod hash_state;
 mod sha1;
 mod sha256;
 mod sha512;
-pub mod hash_state;
+pub mod traits;
 
 mod arith;
 pub use self::sha1::Sha1;

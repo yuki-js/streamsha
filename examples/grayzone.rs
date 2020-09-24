@@ -1,7 +1,7 @@
 use hex_literal::hex;
 use streamsha::hash_state::{HashState, Sha256HashState};
 use streamsha::traits::{Resumable, StreamHasher};
-use streamsha::{Sha256, Sha1};
+use streamsha::{Sha1, Sha256};
 extern crate hex_slice;
 #[macro_use]
 extern crate lazy_static;

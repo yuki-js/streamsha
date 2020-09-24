@@ -1,8 +1,6 @@
-use streamsha::*;
-use streamsha::traits::{
-    StreamHasher, Resumable
-};
 use hex_literal::hex;
+use streamsha::traits::{Resumable, StreamHasher};
+use streamsha::*;
 
 const vectors: &[(&[u8], &[u8])] = &[
     (&[], &hex!("cf83e1357eefb8bd f1542850d66d8007 d620e4050b5715dc 83f4a921d36ce9ce 47d0d13c5d85f2b0 ff8318d2877eec2f 63b931bd47417a81 a538327af927da3e")),
@@ -17,7 +15,7 @@ const vectors: &[(&[u8], &[u8])] = &[
 
 #[test]
 fn it_can_hash_vectors() {
-    for i in vectors.iter(){
+    for i in vectors.iter() {
         let mut hasher = Sha512::new();
         hasher.update(i.0);
         let hash = hasher.finish();

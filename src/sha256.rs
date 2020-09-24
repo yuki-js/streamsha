@@ -1,4 +1,4 @@
-use crate::arith::{Word32, rotr};
+use crate::arith::rotr;
 use crate::consts::*;
 use crate::hash_state;
 use crate::hash_state::HashState;
@@ -6,7 +6,7 @@ use crate::traits::*;
 /// Calculates SHA-256
 pub struct Sha256 {
     /// Hash values
-    h: [Word32; 8],
+    h: [u32; 8],
     /// The max length of message (in bytes) defined in fips 180-4
     message_len: u64,
     /// The length of `current_block` in bytes
@@ -30,7 +30,7 @@ impl Sha256 {
         if self.block_len != SHA256_BLOCK_SIZE {
             panic!("block is not filled");
         }
-        let mut w = [Word32(0); 64];
+        let mut w = [0 as u32; 64];
         for t in 0..16 {
             w[t] = self.get_word32_in_block(t)
         }
@@ -71,34 +71,33 @@ impl Sha256 {
         self.block_len = 0; // reset block
     }
 
-    /// Conbines 4 byte and returns as Word32.
-    const fn get_word32_in_block(&self, i: usize) -> Word32 {
-        let m: u32 = ((self.current_block[i * 4] as u32) << 24)
+    /// Conbines 4 byte and returns as u32.
+    const fn get_word32_in_block(&self, i: usize) -> u32 {
+        ((self.current_block[i * 4] as u32) << 24)
             + ((self.current_block[i * 4 + 1] as u32) << 16)
             + ((self.current_block[i * 4 + 2] as u32) << 8)
-            + (self.current_block[i * 4 + 3] as u32);
-        Word32(m)
+            + (self.current_block[i * 4 + 3] as u32)
     }
 }
 
 /// SHA256 functions
 impl Sha256 {
-    fn sigma0(x: Word32) -> Word32 {
+    fn sigma0(x: u32) -> u32 {
         rotr(x, 2) ^ rotr(x, 13) ^ rotr(x, 22)
     }
-    fn sigma1(x: Word32) -> Word32 {
+    fn sigma1(x: u32) -> u32 {
         rotr(x, 6) ^ rotr(x, 11) ^ rotr(x, 25)
     }
-    fn lsigma0(x: Word32) -> Word32 {
+    fn lsigma0(x: u32) -> u32 {
         rotr(x, 7) ^ rotr(x, 18) ^ (x >> 3)
     }
-    fn lsigma1(x: Word32) -> Word32 {
+    fn lsigma1(x: u32) -> u32 {
         rotr(x, 17) ^ rotr(x, 19) ^ (x >> 10)
     }
-    fn ch(x: Word32, y: Word32, z: Word32) -> Word32 {
+    const fn ch(x: u32, y: u32, z: u32) -> u32 {
         (x & y) ^ (!x & z)
     }
-    fn maj(x: Word32, y: Word32, z: Word32) -> Word32 {
+    const fn maj(x: u32, y: u32, z: u32) -> u32 {
         (x & y) ^ (x & z) ^ (y & z)
     }
 }
@@ -145,23 +144,15 @@ impl StreamHasher for Sha256 {
         let mut final_hash: Self::Output = Default::default();
         for i in 0..8 {
             let word_area = &mut final_hash[i * 4..i * 4 + 4];
-            word_area.clone_from_slice(&self.h[i].0.to_be_bytes());
+            word_area.clone_from_slice(&self.h[i].to_be_bytes());
         }
         return final_hash;
     }
-    
 }
 impl Resumable for Sha256 {
     fn pause(self) -> HashState {
         let h: [u32; 8] = [
-            self.h[0].0,
-            self.h[1].0,
-            self.h[2].0,
-            self.h[3].0,
-            self.h[4].0,
-            self.h[5].0,
-            self.h[6].0,
-            self.h[7].0,
+            self.h[0], self.h[1], self.h[2], self.h[3], self.h[4], self.h[5], self.h[6], self.h[7],
         ];
         HashState::Sha256(hash_state::Sha256HashState {
             h,
@@ -173,7 +164,9 @@ impl Resumable for Sha256 {
     fn resume(hash_state: HashState) -> Result<Self, hash_state::Error> {
         match hash_state {
             HashState::Sha256(hs) => Ok(Self {
-                h: arr32![hs.h[0], hs.h[1], hs.h[2], hs.h[3], hs.h[4], hs.h[5], hs.h[6], hs.h[7]],
+                h: [
+                    hs.h[0], hs.h[1], hs.h[2], hs.h[3], hs.h[4], hs.h[5], hs.h[6], hs.h[7],
+                ],
                 message_len: hs.message_len,
                 block_len: hs.block_len,
                 current_block: hs.current_block,
@@ -187,4 +180,3 @@ impl Default for Sha256 {
         Self::new()
     }
 }
-

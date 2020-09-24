@@ -1,6 +1,4 @@
-use crate::arith::{Word32, Word64};
-
-pub const SHA256_K: [Word32; 64] = arr32![
+pub const SHA256_K: [u32; 64] = [
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
     0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
     0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
@@ -11,13 +9,13 @@ pub const SHA256_K: [Word32; 64] = arr32![
     0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
 ];
 
-pub const SHA256_H: [Word32; 8] = arr32![
+pub const SHA256_H: [u32; 8] = [
     0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
 ];
 // 512 bit SHA-256 block
 pub const SHA256_BLOCK_SIZE: usize = 64;
 
-pub const SHA512_K: [Word64; 80] = arr64![
+pub const SHA512_K: [u64; 80] = [
     0x428a2f98d728ae22,
     0x7137449123ef65cd,
     0xb5c0fbcfec4d3b2f,
@@ -97,10 +95,10 @@ pub const SHA512_K: [Word64; 80] = arr64![
     0x4cc5d4becb3e42b6,
     0x597f299cfc657e2a,
     0x5fcb6fab3ad6faec,
-    0x6c44198c4a475817
+    0x6c44198c4a475817,
 ];
 
-pub const SHA512_H: [Word64; 8] = arr64![
+pub const SHA512_H: [u64; 8] = [
     0x6a09e667f3bcc908,
     0xbb67ae8584caa73b,
     0x3c6ef372fe94f82b,
@@ -108,23 +106,16 @@ pub const SHA512_H: [Word64; 8] = arr64![
     0x510e527fade682d1,
     0x9b05688c2b3e6c1f,
     0x1f83d9abfb41bd6b,
-    0x5be0cd19137e2179
+    0x5be0cd19137e2179,
 ];
 // 1024 bit SHA-512 block
 pub const SHA512_BLOCK_SIZE: usize = 128;
 
-pub const SHA1_H: [Word32; 5] = arr32![
-    0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0
-];
+pub const SHA1_H: [u32; 5] = [0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0];
 
 #[allow(non_snake_case)]
-pub const fn SHA1_K(t: usize) -> Word32 {
-    (arr32![
-        0x5a827999,
-        0x6ed9eba1,
-        0x8f1bbcdc,
-        0xca62c1d6
-    ])[t/20 as usize]
+pub const fn SHA1_K(t: usize) -> u32 {
+    ([0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6])[t / 20 as usize]
 }
 
 pub const SHA1_BLOCK_SIZE: usize = 64;

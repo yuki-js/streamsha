@@ -24,6 +24,6 @@ pub struct Sha512HashState {
     pub current_block: [u8; SHA512_BLOCK_SIZE],
 }
 #[derive(Debug)]
-pub enum Error{
-    HashTypeNotMatch
+pub enum Error {
+    HashTypeNotMatch,
 }
